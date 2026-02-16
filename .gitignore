@@ -1,0 +1,38 @@
+# Rust
+/target/
+**/*.rs.bk
+
+# WASM build artifacts (generated, not committed)
+packages/toon-js/wasm/
+packages/truth-engine-js/wasm/
+*.wasm
+
+# Node
+node_modules/
+.turbo/
+dist/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+*.whl
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Coverage
+lcov.info
+coverage/

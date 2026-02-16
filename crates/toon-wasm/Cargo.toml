@@ -1,0 +1,15 @@
+[package]
+name = "toon-wasm"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+rust-version.workspace = true
+description = "WASM bindings for TOON encoder/decoder"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+toon-core = { path = "../toon-core" }
+wasm-bindgen = { workspace = true }

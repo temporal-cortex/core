@@ -1,0 +1,21 @@
+[package]
+name = "truth-engine"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+rust-version.workspace = true
+description = "Deterministic RRULE expansion with DST handling for AI calendar agents"
+keywords = ["rrule", "calendar", "icalendar", "recurrence", "dst"]
+categories = ["date-and-time"]
+
+[dependencies]
+chrono = { workspace = true }
+chrono-tz = { workspace = true }
+rrule = { workspace = true }
+thiserror = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+
+[dev-dependencies]
+proptest = { workspace = true }

@@ -1,0 +1,23 @@
+{
+  "name": "@temporal-cortex/truth-engine",
+  "version": "0.1.0",
+  "description": "Truth Engine — deterministic RRULE expansion, conflict detection, free/busy for AI calendar agents",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "wasm"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "keywords": ["rrule", "calendar", "icalendar", "recurrence", "wasm"],
+  "license": "MIT OR Apache-2.0",
+  "devDependencies": {
+    "typescript": "^5",
+    "vitest": "^3"
+  }
+}

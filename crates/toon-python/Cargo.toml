@@ -1,0 +1,19 @@
+[package]
+name = "toon-python"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+rust-version.workspace = true
+description = "Python bindings for TOON format encoder/decoder and truth-engine"
+
+[lib]
+name = "toon_format"
+crate-type = ["cdylib"]
+
+[dependencies]
+pyo3 = { workspace = true, features = ["extension-module"] }
+toon-core = { path = "../toon-core" }
+truth-engine = { path = "../truth-engine" }
+serde_json = { workspace = true }
+chrono = { workspace = true }

@@ -1,0 +1,18 @@
+[package]
+name = "truth-engine-wasm"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+rust-version.workspace = true
+description = "WASM bindings for truth-engine (RRULE expansion, conflict detection, free/busy)"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+truth-engine = { path = "../truth-engine" }
+wasm-bindgen = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+chrono = { workspace = true }

@@ -1,0 +1,53 @@
+[workspace]
+resolver = "2"
+members = [
+    "crates/toon-core",
+    "crates/toon-cli",
+    "crates/toon-wasm",
+    "crates/toon-python",
+    "crates/truth-engine",
+    "crates/truth-engine-wasm",
+]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/billylui/temporal-cortex-core"
+rust-version = "1.75"
+
+[workspace.dependencies]
+# Serialization
+serde = { version = "1", features = ["derive"] }
+serde_json = { version = "1", features = ["preserve_order"] }
+
+# Error handling
+thiserror = "2"
+anyhow = "1"
+
+# Time
+chrono = { version = "0.4", features = ["serde"] }
+chrono-tz = "0.10"
+
+# Calendar rules
+rrule = "0.13"
+
+# WASM
+wasm-bindgen = "0.2"
+
+# Python
+pyo3 = { version = "0.23", features = ["auto-initialize"] }
+
+# CLI
+clap = { version = "4", features = ["derive"] }
+
+# Testing
+proptest = "1"
+assert_cmd = "2"
+predicates = "3"
+criterion = { version = "0.5", features = ["html_reports"] }
+
+[profile.release]
+lto = true
+codegen-units = 1
+strip = true

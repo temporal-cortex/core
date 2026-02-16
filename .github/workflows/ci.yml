@@ -1,0 +1,199 @@
+# Temporal Cortex Core -- CI Pipeline
+# Runs on pushes to main and all pull requests.
+# Tests Rust crates, WASM bindings, and Python bindings.
+
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  CARGO_TERM_COLOR: always
+  RUSTFLAGS: -D warnings
+  RUST_BACKTRACE: 1
+
+jobs:
+  # ---------------------------------------------------------------------------
+  # Rust Linting: fmt, clippy, cargo-deny
+  # ---------------------------------------------------------------------------
+  lint-rust:
+    name: Lint Rust
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust stable
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt, clippy
+
+      - name: Cache cargo registry & target
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: lint-${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            lint-${{ runner.os }}-cargo-
+
+      - name: Check formatting
+        run: cargo fmt --check --all
+
+      - name: Run clippy
+        run: cargo clippy --workspace --all-targets -- -D warnings
+
+      - name: Install cargo-deny
+        run: cargo install cargo-deny --locked
+
+      - name: Run cargo-deny
+        run: cargo deny check
+
+  # ---------------------------------------------------------------------------
+  # Rust Tests: Full workspace (no service containers needed)
+  # ---------------------------------------------------------------------------
+  test-rust:
+    name: Test Rust
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust stable
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Cache cargo registry & target
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: test-${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            test-${{ runner.os }}-cargo-
+
+      - name: Run workspace tests
+        run: cargo test --workspace
+
+  # ---------------------------------------------------------------------------
+  # WASM Build + JS Tests (toon-js, truth-engine-js)
+  # ---------------------------------------------------------------------------
+  test-wasm:
+    name: Test WASM + JS
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust stable
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32-unknown-unknown
+
+      - name: Cache cargo registry & target
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: wasm-${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            wasm-${{ runner.os }}-cargo-
+
+      - name: Install wasm-bindgen-cli
+        run: cargo install wasm-bindgen-cli --locked
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install JS dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build toon-wasm
+        run: |
+          cargo build --target wasm32-unknown-unknown -p toon-wasm --release
+          wasm-bindgen --target nodejs \
+            target/wasm32-unknown-unknown/release/toon_wasm.wasm \
+            --out-dir packages/toon-js/wasm/
+
+      - name: Build truth-engine-wasm
+        run: |
+          cargo build --target wasm32-unknown-unknown -p truth-engine-wasm --release
+          wasm-bindgen --target nodejs \
+            target/wasm32-unknown-unknown/release/truth_engine_wasm.wasm \
+            --out-dir packages/truth-engine-js/wasm/
+
+      - name: Rename CJS bindings for ESM compatibility
+        run: |
+          for dir in packages/toon-js/wasm packages/truth-engine-js/wasm; do
+            for f in "$dir"/*.js; do
+              [ -f "$f" ] && mv "$f" "${f%.js}.cjs"
+            done
+          done
+
+      - name: Test toon-js
+        run: pnpm --filter @temporal-cortex/toon test
+
+      - name: Test truth-engine-js
+        run: pnpm --filter @temporal-cortex/truth-engine test
+
+  # ---------------------------------------------------------------------------
+  # Python Bindings Tests
+  # ---------------------------------------------------------------------------
+  test-python:
+    name: Test Python
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust stable
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Cache cargo registry & target
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: python-${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            python-${{ runner.os }}-cargo-
+
+      - name: Setup Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Create virtualenv and install tools
+        working-directory: crates/toon-python
+        run: |
+          python -m venv .venv
+          source .venv/bin/activate
+          pip install maturin pytest
+
+      - name: Build and install Python bindings
+        working-directory: crates/toon-python
+        run: |
+          source .venv/bin/activate
+          maturin develop
+
+      - name: Run Python tests
+        working-directory: crates/toon-python
+        run: |
+          source .venv/bin/activate
+          pytest tests/ -v

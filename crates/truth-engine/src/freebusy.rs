@@ -5,9 +5,10 @@
 
 use crate::expander::ExpandedEvent;
 use chrono::{DateTime, Utc};
+use serde::{Deserialize, Serialize};
 
 /// A free time slot.
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct FreeSlot {
     pub start: DateTime<Utc>,
     pub end: DateTime<Utc>,
@@ -17,7 +18,7 @@ pub struct FreeSlot {
 /// Merge overlapping or adjacent busy periods, clipped to the given window.
 ///
 /// Returns a sorted, non-overlapping list of (start, end) intervals.
-fn merge_busy_periods(
+pub(crate) fn merge_busy_periods(
     events: &[ExpandedEvent],
     window_start: DateTime<Utc>,
     window_end: DateTime<Utc>,

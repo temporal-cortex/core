@@ -189,3 +189,166 @@ pub fn find_free_slots(
     serde_json::to_string(&dtos)
         .map_err(|e| JsValue::from_str(&format!("Serialization error: {}", e)))
 }
+
+// ---------------------------------------------------------------------------
+// Multi-stream availability DTOs
+// ---------------------------------------------------------------------------
+
+/// Input format for event streams passed from JavaScript.
+#[derive(Deserialize)]
+struct EventStreamInput {
+    stream_id: String,
+    events: Vec<EventInput>,
+}
+
+#[derive(Serialize)]
+struct BusyBlockDto {
+    start: String,
+    end: String,
+    source_count: usize,
+}
+
+#[derive(Serialize)]
+struct UnifiedAvailabilityDto {
+    busy: Vec<BusyBlockDto>,
+    free: Vec<FreeSlotDto>,
+    window_start: String,
+    window_end: String,
+    privacy: String,
+}
+
+// ---------------------------------------------------------------------------
+// Multi-stream availability WASM exports
+// ---------------------------------------------------------------------------
+
+/// Merge N event streams into unified availability within a time window.
+///
+/// `streams_json` must be a JSON array of `{stream_id, events: [{start, end}]}`.
+/// `window_start` and `window_end` are ISO 8601 datetime strings.
+/// `opaque` controls privacy: true = hide source counts, false = show them.
+///
+/// Returns a JSON string with `{busy, free, window_start, window_end, privacy}`.
+#[wasm_bindgen(js_name = "mergeAvailability")]
+pub fn merge_availability(
+    streams_json: &str,
+    window_start: &str,
+    window_end: &str,
+    opaque: bool,
+) -> Result<String, JsValue> {
+    let stream_inputs: Vec<EventStreamInput> = serde_json::from_str(streams_json)
+        .map_err(|e| JsValue::from_str(&format!("Invalid streams JSON: {}", e)))?;
+
+    let ws = parse_datetime(window_start)?;
+    let we = parse_datetime(window_end)?;
+
+    let privacy = if opaque {
+        truth_engine::PrivacyLevel::Opaque
+    } else {
+        truth_engine::PrivacyLevel::Full
+    };
+
+    // Convert inputs to truth-engine types.
+    let streams: Vec<truth_engine::EventStream> = stream_inputs
+        .into_iter()
+        .map(|si| {
+            let events: Result<Vec<ExpandedEvent>, JsValue> = si
+                .events
+                .into_iter()
+                .map(|ei| {
+                    let start = parse_datetime(&ei.start)?;
+                    let end = parse_datetime(&ei.end)?;
+                    Ok(ExpandedEvent { start, end })
+                })
+                .collect();
+            Ok(truth_engine::EventStream {
+                stream_id: si.stream_id,
+                events: events?,
+            })
+        })
+        .collect::<Result<Vec<_>, JsValue>>()?;
+
+    let result = truth_engine::merge_availability(&streams, ws, we, privacy);
+
+    let dto = UnifiedAvailabilityDto {
+        busy: result
+            .busy
+            .iter()
+            .map(|b| BusyBlockDto {
+                start: b.start.to_rfc3339(),
+                end: b.end.to_rfc3339(),
+                source_count: b.source_count,
+            })
+            .collect(),
+        free: result
+            .free
+            .iter()
+            .map(|s| FreeSlotDto {
+                start: s.start.to_rfc3339(),
+                end: s.end.to_rfc3339(),
+                duration_minutes: s.duration_minutes,
+            })
+            .collect(),
+        window_start: result.window_start.to_rfc3339(),
+        window_end: result.window_end.to_rfc3339(),
+        privacy: match result.privacy {
+            truth_engine::PrivacyLevel::Full => "full".to_string(),
+            truth_engine::PrivacyLevel::Opaque => "opaque".to_string(),
+        },
+    };
+
+    serde_json::to_string(&dto)
+        .map_err(|e| JsValue::from_str(&format!("Serialization error: {}", e)))
+}
+
+/// Find the first free slot of at least `min_duration_minutes` across N merged
+/// event streams.
+///
+/// `streams_json` must be a JSON array of `{stream_id, events: [{start, end}]}`.
+/// Returns a JSON string with `{start, end, duration_minutes}` or `null`.
+#[wasm_bindgen(js_name = "findFirstFreeAcross")]
+pub fn find_first_free_across(
+    streams_json: &str,
+    window_start: &str,
+    window_end: &str,
+    min_duration_minutes: i64,
+) -> Result<String, JsValue> {
+    let stream_inputs: Vec<EventStreamInput> = serde_json::from_str(streams_json)
+        .map_err(|e| JsValue::from_str(&format!("Invalid streams JSON: {}", e)))?;
+
+    let ws = parse_datetime(window_start)?;
+    let we = parse_datetime(window_end)?;
+
+    let streams: Vec<truth_engine::EventStream> = stream_inputs
+        .into_iter()
+        .map(|si| {
+            let events: Result<Vec<ExpandedEvent>, JsValue> = si
+                .events
+                .into_iter()
+                .map(|ei| {
+                    let start = parse_datetime(&ei.start)?;
+                    let end = parse_datetime(&ei.end)?;
+                    Ok(ExpandedEvent { start, end })
+                })
+                .collect();
+            Ok(truth_engine::EventStream {
+                stream_id: si.stream_id,
+                events: events?,
+            })
+        })
+        .collect::<Result<Vec<_>, JsValue>>()?;
+
+    let slot = truth_engine::find_first_free_across(&streams, ws, we, min_duration_minutes);
+
+    match slot {
+        Some(s) => {
+            let dto = FreeSlotDto {
+                start: s.start.to_rfc3339(),
+                end: s.end.to_rfc3339(),
+                duration_minutes: s.duration_minutes,
+            };
+            serde_json::to_string(&dto)
+                .map_err(|e| JsValue::from_str(&format!("Serialization error: {}", e)))
+        }
+        None => Ok("null".to_string()),
+    }
+}

@@ -24,6 +24,8 @@ const wasm = require("../wasm/truth_engine_wasm.cjs") as {
   ) => string;
   findConflicts: (events_a_json: string, events_b_json: string) => string;
   findFreeSlots: (events_json: string, window_start: string, window_end: string) => string;
+  mergeAvailability: (streams_json: string, window_start: string, window_end: string, opaque: boolean) => string;
+  findFirstFreeAcross: (streams_json: string, window_start: string, window_end: string, min_duration_minutes: number) => string;
 };
 
 // ---------------------------------------------------------------------------
@@ -110,5 +112,74 @@ export function findFreeSlots(
   windowEnd: string,
 ): FreeSlot[] {
   const json = wasm.findFreeSlots(JSON.stringify(events), windowStart, windowEnd);
+  return JSON.parse(json);
+}
+
+// ---------------------------------------------------------------------------
+// Multi-stream availability types
+// ---------------------------------------------------------------------------
+
+export interface EventStream {
+  stream_id: string;
+  events: TimeRange[];
+}
+
+export interface BusyBlock {
+  start: string;
+  end: string;
+  source_count: number;
+}
+
+export interface UnifiedAvailability {
+  busy: BusyBlock[];
+  free: FreeSlot[];
+  window_start: string;
+  window_end: string;
+  privacy: string;
+}
+
+// ---------------------------------------------------------------------------
+// Multi-stream availability API
+// ---------------------------------------------------------------------------
+
+/**
+ * Merge N event streams into unified availability within a time window.
+ *
+ * This is the core of the "Unified Availability Graph" — it computes a
+ * single source of truth for a user's availability across all their calendars.
+ *
+ * @param streams - Array of event streams (from different calendars/providers)
+ * @param windowStart - Start of the analysis window (ISO 8601 datetime)
+ * @param windowEnd - End of the analysis window (ISO 8601 datetime)
+ * @param opaque - If true, hide source counts in busy blocks (privacy mode). Default: true.
+ * @returns Unified availability with busy blocks and free slots
+ */
+export function mergeAvailability(
+  streams: EventStream[],
+  windowStart: string,
+  windowEnd: string,
+  opaque: boolean = true,
+): UnifiedAvailability {
+  const json = wasm.mergeAvailability(JSON.stringify(streams), windowStart, windowEnd, opaque);
+  return JSON.parse(json);
+}
+
+/**
+ * Find the first free slot of at least `minDurationMinutes` across N merged
+ * event streams.
+ *
+ * @param streams - Array of event streams
+ * @param windowStart - Start of the search window (ISO 8601 datetime)
+ * @param windowEnd - End of the search window (ISO 8601 datetime)
+ * @param minDurationMinutes - Minimum slot duration in minutes
+ * @returns The first qualifying free slot, or null if none found
+ */
+export function findFirstFreeAcross(
+  streams: EventStream[],
+  windowStart: string,
+  windowEnd: string,
+  minDurationMinutes: number,
+): FreeSlot | null {
+  const json = wasm.findFirstFreeAcross(JSON.stringify(streams), windowStart, windowEnd, minDurationMinutes);
   return JSON.parse(json);
 }

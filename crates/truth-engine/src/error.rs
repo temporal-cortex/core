@@ -12,6 +12,9 @@ pub enum TruthError {
 
     #[error("Expansion error: {0}")]
     Expansion(String),
+
+    #[error("Availability error: {0}")]
+    Availability(String),
 }
 
 pub type Result<T> = std::result::Result<T, TruthError>;

@@ -1,0 +1,36 @@
+# Temporal Cortex Core — Git Attributes
+# Ensure consistent line endings and diff behavior across platforms.
+
+# Default: auto-detect text files and normalize line endings to LF
+* text=auto eol=lf
+
+# Rust
+*.rs text eol=lf diff=rust
+*.toml text eol=lf
+Cargo.lock text eol=lf -diff
+
+# JavaScript / TypeScript
+*.js text eol=lf
+*.ts text eol=lf
+*.json text eol=lf
+
+# Python
+*.py text eol=lf diff=python
+*.pyi text eol=lf
+
+# Documentation
+*.md text eol=lf diff=markdown
+*.txt text eol=lf
+LICENSE-MIT text eol=lf
+LICENSE-APACHE text eol=lf
+
+# CI / Config
+*.yml text eol=lf
+*.yaml text eol=lf
+*.sh text eol=lf
+
+# Binary files (never normalize)
+*.wasm binary
+*.png binary
+*.jpg binary
+*.gif binary

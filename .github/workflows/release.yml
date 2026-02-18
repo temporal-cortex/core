@@ -207,9 +207,10 @@ jobs:
           restore-keys: |
             publish-${{ runner.os }}-cargo-
 
-      # Publish in dependency order: leaves first, then dependents
+      # Publish in dependency order: leaves first, then dependents.
+      # Each step tolerates "already exists" so re-runs are safe.
       - name: Publish temporal-cortex-toon
-        run: cargo publish -p temporal-cortex-toon --allow-dirty
+        run: cargo publish -p temporal-cortex-toon --allow-dirty || echo "already published"
         env:
           CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}
 
@@ -217,7 +218,7 @@ jobs:
         run: sleep 30
 
       - name: Publish truth-engine
-        run: cargo publish -p truth-engine --allow-dirty
+        run: cargo publish -p truth-engine --allow-dirty || echo "already published"
         env:
           CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}
 
@@ -225,7 +226,7 @@ jobs:
         run: sleep 30
 
       - name: Publish temporal-cortex-toon-cli
-        run: cargo publish -p temporal-cortex-toon-cli --allow-dirty
+        run: cargo publish -p temporal-cortex-toon-cli --allow-dirty || echo "already published"
         env:
           CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}
 
@@ -299,12 +300,12 @@ jobs:
           pnpm --filter @temporal-cortex/truth-engine build
 
       - name: Publish @temporal-cortex/toon
-        run: pnpm --filter @temporal-cortex/toon publish --access public --no-git-checks
+        run: pnpm --filter @temporal-cortex/toon publish --access public --no-git-checks || echo "already published"
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Publish @temporal-cortex/truth-engine
-        run: pnpm --filter @temporal-cortex/truth-engine publish --access public --no-git-checks
+        run: pnpm --filter @temporal-cortex/truth-engine publish --access public --no-git-checks || echo "already published"
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 

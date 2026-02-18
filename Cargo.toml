@@ -36,7 +36,7 @@ rrule = "0.13"
 wasm-bindgen = "0.2"
 
 # Python
-pyo3 = { version = "0.23", features = ["auto-initialize"] }
+pyo3 = { version = "0.28", features = ["auto-initialize"] }
 
 # CLI
 clap = { version = "4", features = ["derive"] }

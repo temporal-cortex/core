@@ -14,7 +14,13 @@
     "test": "vitest run",
     "test:watch": "vitest"
   },
-  "keywords": ["toon", "json", "llm", "compression", "wasm"],
+  "keywords": [
+    "toon",
+    "json",
+    "llm",
+    "compression",
+    "wasm"
+  ],
   "license": "MIT OR Apache-2.0",
   "author": "Billy Lui",
   "repository": {
@@ -29,6 +35,6 @@
   "devDependencies": {
     "@types/node": "^25",
     "typescript": "^5",
-    "vitest": "^3"
+    "vitest": "^4.0.18"
   }
 }

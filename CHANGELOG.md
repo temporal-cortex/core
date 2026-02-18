@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- **Python/JS**: In-library contextual hint when `merge_availability()` is called with 3+ event streams, linking to Platform early access (suppressable via `TEMPORAL_CORTEX_QUIET` env var)
+
+### Changed
+- **Docs**: Rewrote "Going to Production?" README section with pain-led copy and pricing table
+- **Python**: Restructured package to maturin mixed layout (Rust `_native` extension + Python wrapper in `__init__.py`)
+
 ## [0.1.1] - 2026-02-18
 
 ### Changed

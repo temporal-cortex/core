@@ -9,7 +9,7 @@ description = "Python bindings for TOON format encoder/decoder and truth-engine"
 publish = false
 
 [lib]
-name = "temporal_cortex_toon"
+name = "_native"
 crate-type = ["cdylib"]
 
 [dependencies]

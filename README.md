@@ -142,17 +142,25 @@ cargo install temporal-cortex-toon-cli
 
 ## Going to Production?
 
-Core handles the math. For production scheduling you also need:
+`merge_availability()` works perfectly on local test data. Then production happens:
 
-- **Calendar connectors** — Google, Outlook, CalDAV (iCloud) with OAuth token management
-- **Booking safety** — Two-Phase Commit with distributed locking to prevent double-bookings
-- **Policy engine** — Per-caller access rules, focus time protection, override controls
-- **Usage metering** — Track reads, bookings, and expansions per tenant
-- **MCP server** — 6 tools ready for AI agent integration
+- **OAuth token refresh** across Google, Outlook, and iCloud — each with different scopes, error codes, and rate limits
+- **Provider differences** — Google returns RFC 3339, Outlook returns truncated UTC, iCloud returns... whatever CalDAV feels like
+- **Race conditions** — two agents book the same 2pm slot 400ms apart. Without distributed locking, both succeed. One person gets double-booked.
 
-That's the **Temporal Cortex Platform** — currently in private beta. Usage-based pricing starts at $0.001/read and $0.01/booking, with no per-seat fees. Compare that to Nylas ($10/mo + $1/connected account) or Cronofy ($800+/mo).
+The **Temporal Cortex Platform** handles all of this: managed OAuth connectors for Google, Outlook, and CalDAV; Two-Phase Commit with distributed locking for double-booking prevention; per-caller policy rules; and usage metering.
 
-**[Request early access](https://tally.so/r/aQ66W2)**
+| Operation | Price |
+|-----------|-------|
+| Calendar read | $0.001 |
+| Availability check | $0.002 |
+| Booking (with 2PC safety) | $0.01 |
+| Connected account | $0.50/mo |
+| **Free tier** | **100 bookings/mo + 5 accounts** |
+
+No per-seat fees. Currently in private beta.
+
+**[Request early access →](https://tally.so/r/aQ66W2)**
 
 ## TOON Format
 

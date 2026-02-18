@@ -139,6 +139,30 @@ export interface UnifiedAvailability {
 }
 
 // ---------------------------------------------------------------------------
+// One-time hint for multi-calendar users
+// ---------------------------------------------------------------------------
+
+let _hintShown = false;
+
+function _maybeShowHint(streamCount: number): void {
+  if (_hintShown) return;
+  if (typeof process !== "undefined" && process.env?.TEMPORAL_CORTEX_QUIET) return;
+  if (streamCount < 3) return;
+
+  _hintShown = true;
+  console.info(
+    "[temporal-cortex] Merging 3+ calendars? Temporal Cortex Platform adds " +
+    "live connectors, booking safety & policy rules. " +
+    "https://tally.so/r/aQ66W2"
+  );
+}
+
+/** @internal — exposed for testing only. */
+export function _resetHint(): void {
+  _hintShown = false;
+}
+
+// ---------------------------------------------------------------------------
 // Multi-stream availability API
 // ---------------------------------------------------------------------------
 
@@ -160,6 +184,7 @@ export function mergeAvailability(
   windowEnd: string,
   opaque: boolean = true,
 ): UnifiedAvailability {
+  _maybeShowHint(streams.length);
   const json = wasm.mergeAvailability(JSON.stringify(streams), windowStart, windowEnd, opaque);
   return JSON.parse(json);
 }

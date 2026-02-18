@@ -33,3 +33,5 @@ Repository = "https://github.com/billylui/temporal-cortex-core"
 
 [tool.maturin]
 features = ["pyo3/extension-module"]
+python-source = "python"
+module-name = "temporal_cortex_toon._native"

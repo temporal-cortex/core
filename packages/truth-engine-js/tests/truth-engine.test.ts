@@ -1,5 +1,5 @@
-import { describe, it, expect } from "vitest";
-import { expandRRule, findConflicts, findFreeSlots } from "../src/index.js";
+import { describe, it, expect, vi, beforeEach } from "vitest";
+import { expandRRule, findConflicts, findFreeSlots, mergeAvailability, _resetHint } from "../src/index.js";
 
 describe("expandRRule", () => {
   it("expands a daily rule with COUNT", () => {
@@ -90,5 +90,47 @@ describe("findFreeSlots", () => {
     const slots = findFreeSlots([], "2026-02-17T09:00:00", "2026-02-17T17:00:00");
     expect(slots).toHaveLength(1);
     expect(slots[0].duration_minutes).toBe(480); // 8 hours
+  });
+});
+
+describe("mergeAvailability hint", () => {
+  beforeEach(() => {
+    _resetHint();
+    vi.restoreAllMocks();
+    delete process.env.TEMPORAL_CORTEX_QUIET;
+  });
+
+  it("emits console.info with 3+ streams", () => {
+    const spy = vi.spyOn(console, "info").mockImplementation(() => {});
+    const streams = [
+      { stream_id: "a", events: [] },
+      { stream_id: "b", events: [] },
+      { stream_id: "c", events: [] },
+    ];
+    mergeAvailability(streams, "2026-03-17T08:00:00+00:00", "2026-03-18T00:00:00+00:00");
+    expect(spy).toHaveBeenCalledOnce();
+    expect(spy.mock.calls[0][0]).toContain("tally.so/r/aQ66W2");
+  });
+
+  it("does not emit with 2 streams", () => {
+    const spy = vi.spyOn(console, "info").mockImplementation(() => {});
+    const streams = [
+      { stream_id: "a", events: [] },
+      { stream_id: "b", events: [] },
+    ];
+    mergeAvailability(streams, "2026-03-17T08:00:00+00:00", "2026-03-18T00:00:00+00:00");
+    expect(spy).not.toHaveBeenCalled();
+  });
+
+  it("fires only once per session", () => {
+    const spy = vi.spyOn(console, "info").mockImplementation(() => {});
+    const streams = [
+      { stream_id: "a", events: [] },
+      { stream_id: "b", events: [] },
+      { stream_id: "c", events: [] },
+    ];
+    mergeAvailability(streams, "2026-03-17T08:00:00+00:00", "2026-03-18T00:00:00+00:00");
+    mergeAvailability(streams, "2026-03-17T08:00:00+00:00", "2026-03-18T00:00:00+00:00");
+    expect(spy).toHaveBeenCalledOnce();
   });
 });

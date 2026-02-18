@@ -5,9 +5,13 @@ They will fail until the native extension is built and installed.
 """
 
 import json
+import logging
+import os
+
 import pytest
 
 from temporal_cortex_toon import decode, encode, expand_rrule, filter_and_encode
+import temporal_cortex_toon
 
 
 # ---------------------------------------------------------------------------
@@ -242,3 +246,80 @@ class TestExpandRrule:
         end = datetime.fromisoformat(events[0]["end"].replace("+00:00", "+00:00"))
         delta = (end - start).total_seconds()
         assert delta == 45 * 60
+
+
+# ---------------------------------------------------------------------------
+# merge_availability hint
+# ---------------------------------------------------------------------------
+
+
+class TestMergeAvailabilityHint:
+    """Tests for the 3+ stream contextual hint in merge_availability."""
+
+    @staticmethod
+    def _make_streams(n: int) -> str:
+        """Build N empty event streams as a JSON string."""
+        streams = [{"stream_id": f"cal-{i}", "events": []} for i in range(n)]
+        return json.dumps(streams)
+
+    def test_hint_fires_on_3_streams(self, caplog):
+        temporal_cortex_toon._hint_shown = False
+        os.environ.pop("TEMPORAL_CORTEX_QUIET", None)
+
+        with caplog.at_level(logging.INFO, logger="temporal_cortex_toon"):
+            temporal_cortex_toon.merge_availability(
+                self._make_streams(3),
+                "2026-03-17T08:00:00+00:00",
+                "2026-03-18T00:00:00+00:00",
+                True,
+            )
+        assert "tally.so/r/aQ66W2" in caplog.text
+
+    def test_hint_does_not_fire_on_2_streams(self, caplog):
+        temporal_cortex_toon._hint_shown = False
+        os.environ.pop("TEMPORAL_CORTEX_QUIET", None)
+
+        with caplog.at_level(logging.INFO, logger="temporal_cortex_toon"):
+            temporal_cortex_toon.merge_availability(
+                self._make_streams(2),
+                "2026-03-17T08:00:00+00:00",
+                "2026-03-18T00:00:00+00:00",
+                True,
+            )
+        assert "tally.so" not in caplog.text
+
+    def test_hint_fires_only_once(self, caplog):
+        temporal_cortex_toon._hint_shown = False
+        os.environ.pop("TEMPORAL_CORTEX_QUIET", None)
+
+        with caplog.at_level(logging.INFO, logger="temporal_cortex_toon"):
+            temporal_cortex_toon.merge_availability(
+                self._make_streams(4),
+                "2026-03-17T08:00:00+00:00",
+                "2026-03-18T00:00:00+00:00",
+                True,
+            )
+            first_count = caplog.text.count("tally.so/r/aQ66W2")
+            temporal_cortex_toon.merge_availability(
+                self._make_streams(5),
+                "2026-03-17T08:00:00+00:00",
+                "2026-03-18T00:00:00+00:00",
+                True,
+            )
+        assert caplog.text.count("tally.so/r/aQ66W2") == first_count
+
+    def test_hint_suppressed_by_env_var(self, caplog):
+        temporal_cortex_toon._hint_shown = False
+        os.environ["TEMPORAL_CORTEX_QUIET"] = "1"
+
+        try:
+            with caplog.at_level(logging.INFO, logger="temporal_cortex_toon"):
+                temporal_cortex_toon.merge_availability(
+                    self._make_streams(3),
+                    "2026-03-17T08:00:00+00:00",
+                    "2026-03-18T00:00:00+00:00",
+                    True,
+                )
+            assert "tally.so" not in caplog.text
+        finally:
+            os.environ.pop("TEMPORAL_CORTEX_QUIET", None)

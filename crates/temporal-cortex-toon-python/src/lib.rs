@@ -280,9 +280,10 @@ fn find_first_free_across(
     }
 }
 
-/// The `temporal_cortex_toon` Python module, implemented in Rust via PyO3.
+/// The native extension module, exposed as `temporal_cortex_toon._native`.
+/// The public Python API is in `python/temporal_cortex_toon/__init__.py`.
 #[pymodule]
-fn temporal_cortex_toon(m: &Bound<'_, PyModule>) -> PyResult<()> {
+fn _native(m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(encode, m)?)?;
     m.add_function(wrap_pyfunction!(decode, m)?)?;
     m.add_function(wrap_pyfunction!(filter_and_encode, m)?)?;

@@ -149,17 +149,7 @@ cargo install temporal-cortex-toon-cli
 - **Provider differences** — Google returns RFC 3339, Outlook returns truncated UTC, iCloud returns... whatever CalDAV feels like
 - **Race conditions** — two agents book the same 2pm slot 400ms apart. Without distributed locking, both succeed. One person gets double-booked.
 
-The **Temporal Cortex Platform** handles all of this: managed OAuth connectors for Google, Outlook, and CalDAV; Two-Phase Commit with distributed locking for double-booking prevention; per-caller policy rules; and usage metering.
-
-| Operation | Price |
-|-----------|-------|
-| Calendar read | $0.001 |
-| Availability check | $0.002 |
-| Booking (with 2PC safety) | $0.01 |
-| Connected account | $0.50/mo |
-| **Free tier** | **100 bookings/mo + 5 accounts** |
-
-No per-seat fees. Currently in private beta.
+The **Temporal Cortex Platform** handles all of this: managed OAuth connectors for Google, Outlook, and CalDAV; Two-Phase Commit with distributed locking for double-booking prevention; per-caller policy rules; and a managed cloud dashboard.
 
 **[Request early access →](https://tally.so/r/aQ66W2)**
 

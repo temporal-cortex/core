@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- Removed PAYG pricing table from README "Going to Production?" section
+- Updated Platform CTA link
+
 ## [0.2.1] - 2026-02-20
 
 ### Added

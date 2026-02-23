@@ -36,3 +36,9 @@ venv/
 # Coverage
 lcov.info
 coverage/
+
+# Claude Code (personal config)
+CLAUDE.local.md
+.claude/CLAUDE.md
+.claude/settings.local.json
+.claude/*.local.json

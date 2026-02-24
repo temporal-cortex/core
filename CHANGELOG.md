@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- **ci**: Added Dependabot auto-merge workflow — auto-approves and merges patch updates after CI passes
+
 ## [0.3.0] - 2026-02-22
 
 ### Changed

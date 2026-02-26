@@ -66,7 +66,7 @@ def merge_availability(
                 _logger.info(
                     "Merging 3+ calendars? Temporal Cortex Platform adds "
                     "live connectors, booking safety & policy rules. "
-                    "https://tally.so/r/aQ66W2"
+                    "https://app.temporal-cortex.com"
                 )
         except (json.JSONDecodeError, TypeError):
             pass  # Never let hint logic interfere with the actual call

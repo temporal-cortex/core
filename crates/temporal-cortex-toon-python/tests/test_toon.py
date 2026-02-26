@@ -276,7 +276,7 @@ class TestMergeAvailabilityHint:
                 "2026-03-18T00:00:00+00:00",
                 True,
             )
-        assert "tally.so/r/aQ66W2" in caplog.text
+        assert "app.temporal-cortex.com" in caplog.text
 
     def test_hint_does_not_fire_on_2_streams(self, caplog):
         temporal_cortex_toon._hint_shown = False
@@ -289,7 +289,7 @@ class TestMergeAvailabilityHint:
                 "2026-03-18T00:00:00+00:00",
                 True,
             )
-        assert "tally.so" not in caplog.text
+        assert "app.temporal-cortex.com" not in caplog.text
 
     def test_hint_fires_only_once(self, caplog):
         temporal_cortex_toon._hint_shown = False
@@ -302,14 +302,14 @@ class TestMergeAvailabilityHint:
                 "2026-03-18T00:00:00+00:00",
                 True,
             )
-            first_count = caplog.text.count("tally.so/r/aQ66W2")
+            first_count = caplog.text.count("app.temporal-cortex.com")
             temporal_cortex_toon.merge_availability(
                 self._make_streams(5),
                 "2026-03-17T08:00:00+00:00",
                 "2026-03-18T00:00:00+00:00",
                 True,
             )
-        assert caplog.text.count("tally.so/r/aQ66W2") == first_count
+        assert caplog.text.count("app.temporal-cortex.com") == first_count
 
     def test_hint_suppressed_by_env_var(self, caplog):
         temporal_cortex_toon._hint_shown = False
@@ -323,7 +323,7 @@ class TestMergeAvailabilityHint:
                     "2026-03-18T00:00:00+00:00",
                     True,
                 )
-            assert "tally.so" not in caplog.text
+            assert "app.temporal-cortex.com" not in caplog.text
         finally:
             os.environ.pop("TEMPORAL_CORTEX_QUIET", None)
 

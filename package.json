@@ -5,8 +5,9 @@
     "build": "turbo run build",
     "test": "turbo run test",
     "lint": "turbo run lint",
-    "build:wasm:toon": "cargo build --target wasm32-unknown-unknown -p temporal-cortex-toon-wasm --release && wasm-bindgen --target nodejs target/wasm32-unknown-unknown/release/toon_wasm.wasm --out-dir packages/temporal-cortex-toon-js/wasm/",
-    "build:wasm:truth": "cargo build --target wasm32-unknown-unknown -p truth-engine-wasm --release && wasm-bindgen --target nodejs target/wasm32-unknown-unknown/release/truth_engine_wasm.wasm --out-dir packages/truth-engine-js/wasm/"
+    "build:wasm": "pnpm build:wasm:toon && pnpm build:wasm:truth",
+    "build:wasm:toon": "cargo build --target wasm32-unknown-unknown -p temporal-cortex-toon-wasm --release && wasm-bindgen --target nodejs target/wasm32-unknown-unknown/release/toon_wasm.wasm --out-dir packages/temporal-cortex-toon-js/wasm/ && for f in packages/temporal-cortex-toon-js/wasm/*.js; do [ -f \"$f\" ] && mv \"$f\" \"${f%.js}.cjs\"; done",
+    "build:wasm:truth": "cargo build --target wasm32-unknown-unknown -p truth-engine-wasm --release && wasm-bindgen --target nodejs target/wasm32-unknown-unknown/release/truth_engine_wasm.wasm --out-dir packages/truth-engine-js/wasm/ && for f in packages/truth-engine-js/wasm/*.js; do [ -f \"$f\" ] && mv \"$f\" \"${f%.js}.cjs\"; done"
   },
   "devDependencies": {
     "turbo": "^2"

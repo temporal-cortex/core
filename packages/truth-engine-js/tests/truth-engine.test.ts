@@ -112,7 +112,7 @@ describe("mergeAvailability hint", () => {
     ];
     mergeAvailability(streams, "2026-03-17T08:00:00+00:00", "2026-03-18T00:00:00+00:00");
     expect(spy).toHaveBeenCalledOnce();
-    expect(spy.mock.calls[0][0]).toContain("tally.so/r/aQ66W2");
+    expect(spy.mock.calls[0][0]).toContain("app.temporal-cortex.com");
   });
 
   it("does not emit with 2 streams", () => {

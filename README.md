@@ -159,7 +159,7 @@ cargo install temporal-cortex-toon-cli
 - **Provider differences** — Google returns RFC 3339, Outlook returns truncated UTC, CalDAV uses its own format conventions
 - **Race conditions** — two agents booking the same slot simultaneously without distributed locking
 
-The [Temporal Cortex MCP server](https://github.com/billylui/temporal-cortex-mcp) handles all of this: managed OAuth connectors, Two-Phase Commit with distributed locking, and multi-calendar availability merging. A managed cloud option is available via [early access](https://tally.so/r/aQ66W2).
+The [Temporal Cortex MCP server](https://github.com/billylui/temporal-cortex-mcp) handles all of this: managed OAuth connectors, Two-Phase Commit with distributed locking, and multi-calendar availability merging. A managed platform is available at [app.temporal-cortex.com](https://app.temporal-cortex.com).
 
 ## What is TOON and how does it reduce token usage?
 

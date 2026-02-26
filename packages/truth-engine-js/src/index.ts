@@ -158,7 +158,7 @@ function _maybeShowHint(streamCount: number): void {
   console.info(
     "[temporal-cortex] Merging 3+ calendars? Temporal Cortex Platform adds " +
     "live connectors, booking safety & policy rules. " +
-    "https://tally.so/r/aQ66W2"
+    "https://app.temporal-cortex.com"
   );
 }
 

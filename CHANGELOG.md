@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - **ci**: Added Dependabot auto-merge workflow — auto-approves and merges patch updates after CI passes
+- **docs**: Updated README — replaced tally.so early access link with live Platform URL (app.temporal-cortex.com)
+- **toon-python**: Updated SDK upsell hint URL from tally.so to app.temporal-cortex.com
+- **truth-engine-js**: Updated SDK upsell hint URL from tally.so to app.temporal-cortex.com
+
+### Fixed
+- **build**: Fixed `build:wasm` scripts — added missing `.js` → `.cjs` rename step required for ESM compatibility; added unified `pnpm build:wasm` command
 
 ## [0.3.0] - 2026-02-22
 

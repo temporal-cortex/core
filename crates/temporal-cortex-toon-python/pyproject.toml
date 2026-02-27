@@ -27,9 +27,9 @@ classifiers = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/billylui/temporal-cortex-core"
-Repository = "https://github.com/billylui/temporal-cortex-core"
-"Bug Tracker" = "https://github.com/billylui/temporal-cortex-core/issues"
+Homepage = "https://github.com/temporal-cortex/core"
+Repository = "https://github.com/temporal-cortex/core"
+"Bug Tracker" = "https://github.com/temporal-cortex/core/issues"
 
 [tool.maturin]
 features = ["pyo3/extension-module"]

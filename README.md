@@ -1,6 +1,6 @@
 # Temporal Cortex Core
 
-[![CI](https://github.com/billylui/temporal-cortex-core/actions/workflows/ci.yml/badge.svg)](https://github.com/billylui/temporal-cortex-core/actions/workflows/ci.yml)
+[![CI](https://github.com/temporal-cortex/core/actions/workflows/ci.yml/badge.svg)](https://github.com/temporal-cortex/core/actions/workflows/ci.yml)
 [![crates.io](https://img.shields.io/crates/v/truth-engine.svg)](https://crates.io/crates/truth-engine)
 [![npm](https://img.shields.io/npm/v/@temporal-cortex/truth-engine.svg)](https://www.npmjs.com/package/@temporal-cortex/truth-engine)
 [![PyPI](https://img.shields.io/pypi/v/temporal-cortex-toon.svg)](https://pypi.org/project/temporal-cortex-toon/)
@@ -8,7 +8,7 @@
 
 **v0.3.0** · [Changelog](CHANGELOG.md) · **Website:** [temporal-cortex.com](https://temporal-cortex.com)
 
-Temporal Cortex Core is a deterministic computation library that replaces LLM inference for calendar math. It provides temporal resolution ("next Tuesday at 2pm" → RFC 3339), RFC 5545 RRULE expansion, multi-calendar availability merging, conflict detection, and TOON token compression — available for Rust, JavaScript/WASM, and Python. No network calls, no API keys. Used by the [Temporal Cortex MCP server](https://github.com/billylui/temporal-cortex-mcp).
+Temporal Cortex Core is a deterministic computation library that replaces LLM inference for calendar math. It provides temporal resolution ("next Tuesday at 2pm" → RFC 3339), RFC 5545 RRULE expansion, multi-calendar availability merging, conflict detection, and TOON token compression — available for Rust, JavaScript/WASM, and Python. No network calls, no API keys. Used by the [Temporal Cortex MCP server](https://github.com/temporal-cortex/mcp).
 
 ## Why do LLMs fail at calendar computation?
 
@@ -22,7 +22,7 @@ Every person's availability is also fragmented across Google Calendar, Outlook, 
 
 **TOON** (Token-Oriented Object Notation) compresses calendar payloads by ~40% before they enter the context window. Perfect roundtrip fidelity.
 
-For a ready-to-use Model Context Protocol server with these capabilities built in, see [Temporal Cortex MCP](https://github.com/billylui/temporal-cortex-mcp).
+For a ready-to-use Model Context Protocol server with these capabilities built in, see [Temporal Cortex MCP](https://github.com/temporal-cortex/mcp).
 
 ## How do I use Temporal Cortex Core?
 
@@ -159,7 +159,7 @@ cargo install temporal-cortex-toon-cli
 - **Provider differences** — Google returns RFC 3339, Outlook returns truncated UTC, CalDAV uses its own format conventions
 - **Race conditions** — two agents booking the same slot simultaneously without distributed locking
 
-The [Temporal Cortex MCP server](https://github.com/billylui/temporal-cortex-mcp) handles all of this: managed OAuth connectors, Two-Phase Commit with distributed locking, and multi-calendar availability merging. A managed platform is available at [app.temporal-cortex.com](https://app.temporal-cortex.com).
+The [Temporal Cortex MCP server](https://github.com/temporal-cortex/mcp) handles all of this: managed OAuth connectors, Two-Phase Commit with distributed locking, and multi-calendar availability merging. A managed platform is available at [app.temporal-cortex.com](https://app.temporal-cortex.com).
 
 ## What is TOON and how does it reduce token usage?
 
@@ -308,7 +308,7 @@ Rust (`cargo add truth-engine`), JavaScript/TypeScript (`npm i @temporal-cortex/
 
 ### What is the difference between Core and the MCP server?
 
-Core is the computation library — it provides the math for temporal resolution, RRULE expansion, availability merging, and TOON encoding. The [MCP server](https://github.com/billylui/temporal-cortex-mcp) wraps Core in a Model Context Protocol interface, adds calendar provider connectors (Google Calendar, Microsoft Outlook, CalDAV), and provides Two-Phase Commit booking. Use Core directly when you need the computation without MCP infrastructure.
+Core is the computation library — it provides the math for temporal resolution, RRULE expansion, availability merging, and TOON encoding. The [MCP server](https://github.com/temporal-cortex/mcp) wraps Core in a Model Context Protocol interface, adds calendar provider connectors (Google Calendar, Microsoft Outlook, CalDAV), and provides Two-Phase Commit booking. Use Core directly when you need the computation without MCP infrastructure.
 
 ### How does TOON compare to JSON for LLM context windows?
 
@@ -350,8 +350,8 @@ This project follows strict TDD (Red-Green-Refactor). No production code without
 
 ## Where can I learn more about Temporal Cortex?
 
-- **[temporal-cortex-mcp](https://github.com/billylui/temporal-cortex-mcp)** — MCP server (11 tools, 4 layers) powered by Truth Engine and TOON
-- **[temporal-cortex-skill](https://github.com/billylui/temporal-cortex-skill)** — Agent Skill that teaches AI agents the scheduling workflow
+- **[temporal-cortex-mcp](https://github.com/temporal-cortex/mcp)** — MCP server (11 tools, 4 layers) powered by Truth Engine and TOON
+- **[temporal-cortex-skill](https://github.com/temporal-cortex/skills)** — Agent Skill that teaches AI agents the scheduling workflow
 
 ## Contributing
 

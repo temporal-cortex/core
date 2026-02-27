@@ -2,7 +2,7 @@
 
 **10 calendar challenges that break LLMs on date/time computation.**
 
-LLMs hallucinate dates. Even the latest frontier models score below 50% on temporal reasoning tasks ([OOLONG benchmark](https://arxiv.org/abs/2511.02817)), with scheduling accuracy as low as 29% and duration calculations at 13% ([Test of Time, ICLR 2025](https://arxiv.org/abs/2406.09170)). But no public benchmark exists specifically for RFC 5545 RRULE expansion -- the core operation behind every recurring calendar event. The RRULE Gauntlet fills that gap: 10 carefully designed challenges that target specific, reproducible LLM failure modes, each with an objectively verifiable correct answer computed by [Truth Engine](https://github.com/billylui/temporal-cortex-core).
+LLMs hallucinate dates. Even the latest frontier models score below 50% on temporal reasoning tasks ([OOLONG benchmark](https://arxiv.org/abs/2511.02817)), with scheduling accuracy as low as 29% and duration calculations at 13% ([Test of Time, ICLR 2025](https://arxiv.org/abs/2406.09170)). But no public benchmark exists specifically for RFC 5545 RRULE expansion -- the core operation behind every recurring calendar event. The RRULE Gauntlet fills that gap: 10 carefully designed challenges that target specific, reproducible LLM failure modes, each with an objectively verifiable correct answer computed by [Truth Engine](https://github.com/temporal-cortex/core).
 
 ## The Challenges
 

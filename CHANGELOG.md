@@ -12,6 +12,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **docs**: Updated README — replaced tally.so early access link with live Platform URL (app.temporal-cortex.com)
 - **toon-python**: Updated SDK upsell hint URL from tally.so to app.temporal-cortex.com
 - **truth-engine-js**: Updated SDK upsell hint URL from tally.so to app.temporal-cortex.com
+- **docs**: Replaced misattributed AuthenHallu citation with Test of Time (ICLR 2025) and OOLONG benchmarks for temporal reasoning accuracy claims
+- **docs**: Standardized TOON compression claim from "40-60%" to "~40%" across all documentation
 
 ### Fixed
 - **build**: Fixed `build:wasm` scripts — added missing `.js` → `.cjs` rename step required for ESM compatibility; added unified `pnpm build:wasm` command

@@ -274,7 +274,7 @@ All four functions are pure computation — no clock, no network. They take expl
 ## What is the crate architecture?
 
 ```
-temporal-cortex-core/
+core/
 ├── crates/
 │   ├── truth-engine/                 # RRULE expansion, availability, conflicts, free/busy
 │   ├── truth-engine-wasm/            # WASM bindings

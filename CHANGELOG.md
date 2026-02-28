@@ -7,7 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.1] - 2026-02-28
+
 ### Changed
+- **repo**: Migrated GitHub organization from `billylui/*` to `temporal-cortex/*` — all repository URLs, CI badges, and crate metadata updated
 - **ci**: Added Dependabot auto-merge workflow — auto-approves and merges patch updates after CI passes
 - **docs**: Updated README — replaced tally.so early access link with live Platform URL (app.temporal-cortex.com)
 - **toon-python**: Updated SDK upsell hint URL from tally.so to app.temporal-cortex.com
@@ -82,7 +85,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Release**: Automated publishing to crates.io, npm, and PyPI on version tags
 - **QA**: 446+ Rust tests, 39+ JS tests, 26 Python tests, ~9,000 property-based tests
 
-[Unreleased]: https://github.com/temporal-cortex/core/compare/v0.3.0...HEAD
+[Unreleased]: https://github.com/temporal-cortex/core/compare/v0.3.1...HEAD
+[0.3.1]: https://github.com/temporal-cortex/core/compare/v0.3.0...v0.3.1
 [0.3.0]: https://github.com/temporal-cortex/core/compare/v0.2.1...v0.3.0
 [0.2.1]: https://github.com/temporal-cortex/core/compare/v0.2.0...v0.2.1
 [0.2.0]: https://github.com/temporal-cortex/core/compare/v0.1.1...v0.2.0

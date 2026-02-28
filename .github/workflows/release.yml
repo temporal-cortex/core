@@ -104,7 +104,7 @@ jobs:
             wasm-${{ runner.os }}-cargo-
 
       - name: Install wasm-bindgen-cli
-        run: cargo install wasm-bindgen-cli --locked
+        run: cargo install wasm-bindgen-cli@0.2.108 --locked
 
       - name: Install pnpm
         uses: pnpm/action-setup@v4
@@ -272,7 +272,7 @@ jobs:
             wasm-${{ runner.os }}-cargo-
 
       - name: Install wasm-bindgen-cli
-        run: cargo install wasm-bindgen-cli --locked
+        run: cargo install wasm-bindgen-cli@0.2.108 --locked
 
       - name: Install pnpm
         uses: pnpm/action-setup@v4

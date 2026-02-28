@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - **build**: Fixed `build:wasm` scripts — added missing `.js` → `.cjs` rename step required for ESM compatibility; added unified `pnpm build:wasm` command
+- **ci**: Pinned `wasm-bindgen-cli` to v0.2.108 — must match `Cargo.lock` version to avoid schema mismatch errors
 
 ## [0.3.0] - 2026-02-22
 

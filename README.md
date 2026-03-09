@@ -8,9 +8,9 @@
 
 **v0.3.1** · [Changelog](CHANGELOG.md) · **Website:** [temporal-cortex.com](https://temporal-cortex.com)
 
-Core is the computation engine behind [Temporal Cortex](https://temporal-cortex.com) — the scheduling layer that lets AI agents schedule with anyone.
+Core is the computation engine behind [Temporal Cortex](https://temporal-cortex.com) — open scheduling infrastructure that lets any AI agent schedule reliably.
 
-Temporal Cortex Core is a deterministic computation library that replaces LLM inference for calendar math. It provides temporal resolution ("next Tuesday at 2pm" → RFC 3339), RFC 5545 RRULE expansion, multi-calendar availability merging, conflict detection, and TOON token compression — available for Rust, JavaScript/WASM, and Python. No network calls, no API keys. Used by the [Temporal Cortex MCP server](https://github.com/temporal-cortex/mcp).
+Temporal Cortex Core is a deterministic computation library that replaces LLM inference for calendar math. It provides temporal resolution ("next Tuesday at 2pm" → RFC 3339), RFC 5545 RRULE expansion, multi-calendar availability merging, conflict detection, and TOON token compression — available for Rust, JavaScript/WASM, and Python. No network calls, no API keys. Core provides the computation foundation; the [Temporal Cortex infrastructure layer](https://github.com/temporal-cortex/mcp) adds protocols (MCP, A2A, REST) and coordination on top.
 
 ## Why do LLMs fail at calendar computation?
 

@@ -152,7 +152,7 @@ fn arb_tabular_array() -> impl Strategy<Value = Value> {
                 .into_iter()
                 .map(|vals| {
                     let mut map = Map::new();
-                    for (k, v) in fields_clone.iter().zip(vals.into_iter()) {
+                    for (k, v) in fields_clone.iter().zip(vals) {
                         map.insert(k.clone(), v);
                     }
                     Value::Object(map)

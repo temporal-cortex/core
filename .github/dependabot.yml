@@ -34,6 +34,13 @@ updates:
         update-types:
           - minor
           - patch
+    ignore:
+      # TypeScript 6.0 is a transition release with breaking changes
+      # (moduleResolution: classic removed, esModuleInterop forced,
+      # target: ES2023 default, rootDir behavior change). TS 7.0 is
+      # coming as a Go rewrite — defer major bumps until then.
+      - dependency-name: "typescript"
+        update-types: ["version-update:semver-major"]
 
   # GitHub Actions
   - package-ecosystem: github-actions

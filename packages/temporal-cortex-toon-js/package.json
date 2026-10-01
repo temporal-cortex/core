@@ -33,7 +33,7 @@
     "url": "https://github.com/temporal-cortex/core/issues"
   },
   "devDependencies": {
-    "@types/node": "^25",
+    "@types/node": "^26",
     "typescript": "^5",
     "vitest": "^4.1.9"
   }
